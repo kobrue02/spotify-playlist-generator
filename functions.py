@@ -1,3 +1,5 @@
+import json
+
 import spotipy
 
 from keys import *
@@ -15,25 +17,24 @@ def create_playlist(name_of_playlist: str, desc: str):
 
 
 def add_songs_to_playlist(songs: list):
-    list_of_songs = []
-    for song in songs:
-        result = spot.search(q=song)
-        uri = result['tracks']['items'][0]['uri']
-        list_of_songs.append(uri)
 
     playlist = spot.user_playlists(user=username)['items'][0]['id']
 
     spot.user_playlist_add_tracks(user=username,
                                   playlist_id=playlist,
-                                  tracks=list_of_songs)
+                                  tracks=songs)
 
 
-def list_of_songs_by_genre(genres: list):
-    recs = spot.recommendations(seed_genres=genres)
-    song_list = []
-    for track in recs['tracks']:
-        song_list.append(track['name'])
-    return song_list
+def list_of_songs_by_genre(genres: list) -> list:
+
+    query = "genre: {}".format(genres[0])
+    if len(genres) > 1:
+        for genre in genres[1:]:
+            query += " AND genre: {}".format(genre)
+
+    recs = spot.search(q=query, type='track', limit=50, offset=0)
+    songs = [track['uri'] for track in recs['tracks']['items']]
+    return songs
 
 
 def generate_playlist(playlist_title: str, playlist_description: str, genres: list):
@@ -49,6 +50,10 @@ def main(genres):
 
 
 list_of_genres = spot.recommendation_genre_seeds()['genres']
+
+if __name__ == "__main__":
+    genres = ['blues', 'rock']
+    print(list_of_songs_by_genre(genres))
 
 
 
