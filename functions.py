@@ -27,9 +27,10 @@ def add_songs_to_playlist(songs: list):
 
 def list_of_songs_by_genre(genres: list) -> list:
 
-    query = "genre: {}".format(genres[0])
+    query = "genre: {}".format(genres[0].replace(" ", "_"))
     if len(genres) > 1:
         for genre in genres[1:]:
+            genre = genre.replace(" ", "_")
             query += " AND genre: {}".format(genre)
 
     recs = spot.search(q=query, type='track', limit=50, offset=0)
