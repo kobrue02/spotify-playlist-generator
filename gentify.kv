@@ -1,0 +1,19 @@
+<MyRoot>:
+
+    scs_label: scs_label
+
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Gentify"
+            font_size: 64
+            color: 0.32, 0.75, 0
+        Label:
+            id: scs_label
+            text: "Press the Button!"
+            font_size: 64
+        Button:
+            text: "Generate"
+            font_size: 32
+            size: 100, 50
+            on_press: root.generate_playlist()
